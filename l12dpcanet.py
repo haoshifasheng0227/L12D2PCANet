@@ -109,7 +109,7 @@ def extract_patches(image, k):
     return patches
 
 #given all the images, return the required number of 2dpca filters
-def get_filters(X,k=5,L=4,eps=1e-6,maxitr=100):
+def get_filters(X,k=5,L=4,eps=1e-6,maxitr=100,seed=101):
 
     N, m, n = X.shape
     patches_bar_x = []
@@ -129,7 +129,7 @@ def get_filters(X,k=5,L=4,eps=1e-6,maxitr=100):
     patches_bar_x = np.concatenate(patches_bar_x, axis=0)
     patches_bar_y = np.concatenate(patches_bar_y, axis=0)
 
-    np.random.seed(101)
+    np.random.seed(seed)
     filter_x = find_k_pc(patches_bar_x, L=L, eps = eps, maxitr=maxitr)
     filter_y = find_k_pc(patches_bar_y, L=L, eps = eps, maxitr=maxitr)
     Ws = []
@@ -139,7 +139,8 @@ def get_filters(X,k=5,L=4,eps=1e-6,maxitr=100):
     return Ws
 
 #Given all the images as input,return the l12dpcanet filters at both layers
-def get_l12dpcanet_filters(X,k=5,L1=4,L2=4,eps=1e-6,maxitr=100):
+def get_l12dpcanet_filters(X,k=5,L1=4,L2=4,eps=1e-6,maxitr=100,seed=101):
+
     '''
     :param X: input images, N*m*n
     :param k: filter size
@@ -149,7 +150,7 @@ def get_l12dpcanet_filters(X,k=5,L1=4,L2=4,eps=1e-6,maxitr=100):
     '''
     N, m, n = X.shape  # N:number of images  m,n:height,width
     # get the first layer filters
-    W_layer1 = get_filters(X, k=k, L=L1, eps=eps, maxitr=maxitr)
+    W_layer1 = get_filters(X, k=k, L=L1, eps=eps, maxitr=maxitr,seed=seed)
 
     # the output after the first convolutional layer
     O1 = np.zeros((N, m, n, L1))
@@ -163,7 +164,7 @@ def get_l12dpcanet_filters(X,k=5,L1=4,L2=4,eps=1e-6,maxitr=100):
     # get the filters of the second convolutional layer
     O1_combine = np.transpose(O1, (0, 3, 1, 2))
     O1_combine = O1_combine.reshape(-1, m, n)
-    W_layer2 = get_filters(O1_combine, k=k, L=L2, eps=eps, maxitr=maxitr)
+    W_layer2 = get_filters(O1_combine, k=k, L=L2, eps=eps, maxitr=maxitr,seed=seed)
     return [W_layer1,W_layer2]
 
 #Given all the images and two-layer filters as input,return the l12dpcanet feature vector for each image
