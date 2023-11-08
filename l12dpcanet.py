@@ -50,8 +50,16 @@ def find_first_pc(X,eps=1e-6,maxitr=100):
         # get updated w
         w1 = np.dot(X_flat.T, p)
         w1 = w1 / np.linalg.norm(w1, ord=2)
-        if np.linalg.norm(w1 - w0, ord=2) < eps:
+
+        #newly added on Nov 8, 2023, check whether w1 is orthogonal to any columns
+        w1x = np.dot(X_flat, w1)
+
+        if np.linalg.norm(w1 - w0, ord=2) < eps and np.count_nonzero(w1x) == len(w1x):
             break
+        elif np.linalg.norm(w1 - w0, ord=2) < eps and np.count_nonzero(w1x) != len(w1x):
+            w_st = np.random.normal(0, 1, size=(n, 1)) / 10000
+            w0 = w1 + w_st
+            w0 = w0 / np.linalg.norm(w0, ord=2)
         else:
             w0 = w1.copy()
         itr += 1
