@@ -7,6 +7,7 @@ import fnmatch
 import numpy as np
 import cv2
 
+'''
 path = "./yale-train-test/yale7/train/"
 
 def find_files(directory, pattern):
@@ -27,7 +28,7 @@ for file in files:
 
 X = np.stack(img_list)
 #X = X.astype(np.float32)
-
+'''
 
 
 #find the first 2D PC
@@ -35,7 +36,6 @@ def find_first_pc(X,eps=1e-6,maxitr=100):
     N, m, n = X.shape
 
     # initialize v,t
-    t = 0
     w0 = np.random.normal(0,1,size=(n,1))
     w0 = w0/np.linalg.norm(w0, ord=2)
     itr = 0
@@ -47,7 +47,6 @@ def find_first_pc(X,eps=1e-6,maxitr=100):
         p = np.dot(X_flat,w0)
         p = -1 + (p>=0)*2
         #p = p.reshape(N,m)
-        t += 1
         # get updated w
         w1 = np.dot(X_flat.T, p)
         w1 = w1 / np.linalg.norm(w1, ord=2)
@@ -333,12 +332,12 @@ def get_l12dpcanet_features_oldversion(X,k=5,L1=4,L2=4,B=8,eps=1e-6,maxitr=100):
 
 
 
-W = get_l12dpcanet_filters(X)
-X_final = get_l12dpcanet_features(X,W)
+#W = get_l12dpcanet_filters(X)
+#X_final = get_l12dpcanet_features(X,W)
 
 
 
-X_final_1 = get_l12dpcanet_features_oldversion(X)
+#X_final_1 = get_l12dpcanet_features_oldversion(X)
 
 
 
