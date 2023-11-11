@@ -1,8 +1,6 @@
 import re
 import seaborn as sns;sns.set()
 from l12dpcanet import *
-#from libsvm.svmutil import *
-from sklearn.decomposition import PCA
 from sklearn import svm
 import os
 
@@ -11,8 +9,8 @@ import os
 
 # DIRECTORY_TRAIN = "yale-train-test-mask/yale-train-mask-10"
 # DIRECTORY_TEST = "yale-train-test-mask/yale-test-mask-10"
-DIRECTORY_TRAIN = "yale-train-test-111/yale2-2/train"
-DIRECTORY_TEST = "yale-train-test-111/yale2-2/test"
+DIRECTORY_TRAIN = "yale-train-test/yale2/train"
+DIRECTORY_TEST = "yale-train-test/yale2/test"
 
 def list_files(directory, contains):
     return list(f for f in listdir(directory) if contains in f)
@@ -56,18 +54,7 @@ def makeX(DIRECTORY):
 # make label for dataset
 x_train,y_train = makeX(DIRECTORY_TRAIN)
 x_test,y_test = makeX(DIRECTORY_TEST)
-'''
-# apply sklearn pca
-n_samples = x_train.shape[0]
-image_size = x_train.shape[1] * x_train.shape[2]
-X_train = x_train.reshape(n_samples, image_size)
-n_samples_test = x_test.shape[0]
-image_size_test = x_test.shape[1] * x_test.shape[2]
-X_test = x_test.reshape(n_samples_test, image_size_test)
-pca=PCA(20).fit(X_train)
-x_train_pca= pca.transform(X_train)
-x_test_pca= pca.transform(X_test)
-'''
+
 # apply l12dpcanet_features
 w_train_pca=get_l12dpcanet_filters(x_train)
 x_train_pca=get_l12dpcanet_features(x_train,w_train_pca)
